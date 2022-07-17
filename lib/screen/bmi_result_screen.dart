@@ -16,7 +16,6 @@ class BmiResultScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Result BMI'),
-        centerTitle: true,
       ),
       body: Column(
         children: [

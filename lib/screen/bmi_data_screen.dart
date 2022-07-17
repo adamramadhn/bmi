@@ -1,5 +1,7 @@
 import 'package:bmi/constant/constant.dart';
+import 'package:bmi/constant/helpers.dart';
 import 'package:bmi/screen/bmi_result_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BmiDataScreen extends StatefulWidget {
@@ -11,57 +13,65 @@ class BmiDataScreen extends StatefulWidget {
 
 class _BmiDataScreenState extends State<BmiDataScreen> {
   double height = 150;
-  int weight = 65;
+  int weight = 0;
   int age = 20;
   double bmi = 0;
   String suggest = '';
   String category = "";
+  String? gender;
 
-  calculateBmi(double height, int weight) {
-    double heightInMeter = height / 100;
-    bmi = weight / (heightInMeter * heightInMeter);
-  }
-
-  categoryData() {
-    if (bmi < 17.0) {
-      category = "Thin";
-      suggest = "Your BMI is Low, Eat more!";
-    } else if (bmi >= 17.0 && bmi <= 18.4) {
-      category = "A bit skinny";
-      suggest = "Your BMI is quite Low, Eat more!";
-    } else if (bmi >= 18.5 && bmi <= 25.0) {
-      category = "Normal";
-      suggest = "Your BMI Normal";
-    } else if (bmi > 25.5 && bmi <= 27.0) {
-      category = "Chubby";
-      suggest = "Your BMI is quite high, eat less!";
-    } else {
-      category = "Fat";
-      suggest = "Your BMI is high, Diet!";
+  generateWeight() {
+    List<Widget> weight = [];
+    for (int i = 0; i <= 220; i++) {
+      weight.add(
+        Text(
+          i.toString(),
+          style: labelTextStyle!.copyWith(
+            fontSize: 20,
+          ),
+        ),
+      );
     }
-    return category;
+    return weight;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: primaryColor,
       appBar: AppBar(
         title: const Text("BMI Calculator"),
-        centerTitle: true,
       ),
       body: Column(
         children: [
           Expanded(
               child: Row(
-            children: const [
+            children: [
               Expanded(
-                  child: BmiCard(
-                child: GenderIconText(gender: "Male", iconData: Icons.male),
+                  child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    gender = "male";
+                  });
+                },
+                child: BmiCard(
+                  borderColor: (gender == "male") ? Colors.white : primaryColor,
+                  child: const GenderIconText(
+                      gender: "Male", iconData: Icons.male),
+                ),
               )),
               Expanded(
-                  child: BmiCard(
-                child: GenderIconText(gender: "Female", iconData: Icons.female),
+                  child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    gender = "female";
+                  });
+                },
+                child: BmiCard(
+                  borderColor:
+                      (gender == "female") ? Colors.white : primaryColor,
+                  child: const GenderIconText(
+                      gender: "Female", iconData: Icons.female),
+                ),
               )),
             ],
           )),
@@ -116,47 +126,21 @@ class _BmiDataScreenState extends State<BmiDataScreen> {
                       "WEIGHT",
                       style: labelTextStyle,
                     ),
-                    Text(
-                      weight.toString(),
-                      style: numberTextStyle,
+                    Container(
+                      padding: const EdgeInsets.only(top: 10),
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      child: CupertinoPicker(
+                        children: generateWeight(),
+                        magnification: 1.8,
+                        useMagnifier: true,
+                        itemExtent: 25,
+                        onSelectedItemChanged: (int value) {
+                          setState(() {
+                            weight = value;
+                          });
+                        },
+                      ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        RawMaterialButton(
-                          onPressed: () {
-                            setState(() {
-                              weight--;
-                            });
-                          },
-                          elevation: 0,
-                          shape: const CircleBorder(),
-                          fillColor: const Color(0xff212747),
-                          constraints: const BoxConstraints.tightFor(
-                              width: 56, height: 56),
-                          child: const Icon(
-                            Icons.remove,
-                            color: Colors.white,
-                          ),
-                        ),
-                        RawMaterialButton(
-                          onPressed: () {
-                            setState(() {
-                              weight++;
-                            });
-                          },
-                          elevation: 0,
-                          shape: const CircleBorder(),
-                          fillColor: const Color(0xff212747),
-                          constraints: const BoxConstraints.tightFor(
-                              width: 56, height: 56),
-                          child: const Icon(
-                            Icons.add,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    )
                   ],
                 ),
               )),
@@ -169,47 +153,21 @@ class _BmiDataScreenState extends State<BmiDataScreen> {
                       "AGE",
                       style: labelTextStyle,
                     ),
-                    Text(
-                      age.toString(),
-                      style: numberTextStyle,
+                    Container(
+                      padding: const EdgeInsets.only(top: 10),
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      child: CupertinoPicker(
+                        children: generateWeight(),
+                        magnification: 1.8,
+                        useMagnifier: true,
+                        itemExtent: 25,
+                        onSelectedItemChanged: (int value) {
+                          setState(() {
+                            age = value;
+                          });
+                        },
+                      ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        RawMaterialButton(
-                          onPressed: () {
-                            setState(() {
-                              age--;
-                            });
-                          },
-                          elevation: 0,
-                          shape: const CircleBorder(),
-                          fillColor: const Color(0xff212747),
-                          constraints: const BoxConstraints.tightFor(
-                              width: 56, height: 56),
-                          child: const Icon(
-                            Icons.remove,
-                            color: Colors.white,
-                          ),
-                        ),
-                        RawMaterialButton(
-                          onPressed: () {
-                            setState(() {
-                              age++;
-                            });
-                          },
-                          elevation: 0,
-                          shape: const CircleBorder(),
-                          fillColor: const Color(0xff212747),
-                          constraints: const BoxConstraints.tightFor(
-                              width: 56, height: 56),
-                          child: const Icon(
-                            Icons.add,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    )
                   ],
                 ),
               )),
@@ -217,15 +175,17 @@ class _BmiDataScreenState extends State<BmiDataScreen> {
           )),
           GestureDetector(
             onTap: () {
-              calculateBmi(height, weight);
-              categoryData();
+              final BmiCalculator bmiCalculator =
+                  BmiCalculator(height: height, weight: weight);
+              bmiCalculator.calculateBmi();
+              bmiCalculator.categoryData();
               Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => BmiResultScreen(
-                      bmi: bmi,
-                      category: category,
-                      suggest: suggest,
+                      bmi: bmiCalculator.bmi!,
+                      category: bmiCalculator.bmiCategroy!,
+                      suggest: bmiCalculator.suggest!,
                     ),
                   ));
             },
@@ -271,15 +231,17 @@ class GenderIconText extends StatelessWidget {
 }
 
 class BmiCard extends StatelessWidget {
-  const BmiCard({Key? key, this.child}) : super(key: key);
+  const BmiCard({Key? key, this.child, this.borderColor = primaryColor})
+      : super(key: key);
   final Widget? child;
+  final Color? borderColor;
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: secondaryColor,
-        borderRadius: BorderRadius.circular(15),
-      ),
+          color: secondaryColor,
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: borderColor!)),
       margin: const EdgeInsets.all(15),
       child: child,
     );
